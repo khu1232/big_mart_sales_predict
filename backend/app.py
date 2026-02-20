@@ -7,7 +7,7 @@ st.set_page_config(page_title="Big Mart Sales Prediction")
 st.title("🛒 Big Mart Sales Prediction")
 
 # Load full pipeline model
-model = pickle.load(open("ml_model3.pkl", "rb"))
+model = pickle.load(open("ml_model.pkl", "rb"))
 
 # User Inputs
 product_id = st.text_input("Product ID")
