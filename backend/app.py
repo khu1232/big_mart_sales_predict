@@ -1,50 +1,44 @@
 import streamlit as st
-import pickle 
-import numpy as np 
+import pickle
 import pandas as pd
 
-st.set_page_config(page_title="BIG MART SALES PRICE PREDICATION")
+st.set_page_config(page_title="Big Mart Sales Prediction")
 
-st.title("BIG MART SALES PRICE PREDICATION")
-st.write("This is a web application that predicts the sales price of a product based on its features. The model used for prediction is a Random Forest Regressor, which has been trained on a dataset of sales data from Big Mart.")
+st.title("🛒 Big Mart Sales Prediction")
 
-model = pickle.load(open('ml_model.pkl','rb'))
+# Load full pipeline model
+model = pickle.load(open("ml_model3.pkl", "rb"))
 
-item_weight = st.number_input("Enter the weight of the item(in gms):")
-item_visibility = st.number_input("Enter the visibility of the item:")
-item_mrp = st.number_input("Enter the MRP of the item:")
+# User Inputs
+product_id = st.text_input("Product ID")
+weight = st.number_input("Weight")
+fat_content = st.selectbox("Fat Content", ["Low Fat", "Regular"])
+product_visibility = st.number_input("Product Visibility")
+product_type = st.text_input("Product Type")
+mrp = st.number_input("MRP")
+outlet_id = st.text_input("Outlet ID")
+establishment_year = st.number_input("Establishment Year")
+outlet_size = st.selectbox("Outlet Size", ["Small", "Medium", "High"])
+location_type = st.selectbox("Location Type", ["Tier 1", "Tier 2", "Tier 3"])
+outlet_type = st.selectbox(
+    "Outlet Type",
+    ["Grocery Store", "Supermarket Type1", "Supermarket Type2", "Supermarket Type3"]
+)
 
-item_fat_content = st.selectbox("FAT CONTENT",['Low Fat','Regular'])
+input_df = pd.DataFrame({
+    "ProductID": [product_id],
+    "Weight": [weight],
+    "FatContent": [fat_content],
+    "ProductVisibility": [product_visibility],
+    "ProductType": [product_type],
+    "MRP": [mrp],
+    "OutletID": [outlet_id],
+    "EstablishmentYear": [establishment_year],
+    "OutletSize": [outlet_size],
+    "LocationType": [location_type],
+    "OutletType": [outlet_type]
+})
 
-
-item_outlet_size = st.selectbox("OUTLET SIZE",['Small','Medium','High'])
-
-item_outlet_location_type = st.selectbox("OUTLET LOCATION TYPE",['Tier 1','Tier 2','Tier 3'])
-
-item_outlet_type = st.selectbox("OUTLET TYPE",['Grocery Store','Supermarket Type1','Supermarket Type2','Supermarket Type3'])
-
-fat_map = {"Low Fat": 0, "Regular": 1}
-size_map = {"Small": 0, "Medium": 1, "High": 2}
-location_map = {"Tier 1": 0, "Tier 2": 1, "Tier 3": 2}
-type_map = {
-    "Grocery Store": 0,
-    "Supermarket Type1": 1,
-    "Supermarket Type2": 2,
-    "Supermarket Type3": 3
-}
-
-
-input_array = ([[
-item_weight,
-item_visibility,
-item_mrp,
-fat_map[item_fat_content],
-size_map[item_outlet_size],
-location_map[item_outlet_location_type],
-type_map[item_outlet_type]
-
-]])
-
-if st.button("Predict Sales Price"):
-     prediction = model.predict(input_array)
-     st.success(f"The predicted sales price is: {prediction[0]}")
+if st.button("Predict Sales"):
+    prediction = model.predict(input_df)
+    st.success(f"💰 Predicted Sales: ₹ {prediction[0]:.2f}")
