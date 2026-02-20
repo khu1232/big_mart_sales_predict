@@ -1,0 +1,12 @@
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+*.pkl
+
+
+# Environment
+.env
+
+# OS
+.DS_Store
